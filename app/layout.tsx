@@ -4,6 +4,9 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import LightRays from '@/components/LightRays';
 import Navbar from "@/components/Navbar";
+import { PostHogProvider } from './providers';
+import { PageViewTracker } from './PageViewTracker';
+import { Suspense } from 'react';
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -33,26 +36,31 @@ export default function RootLayout({
       className={cn("h-full", "antialiased", "font-sans", geist.variable)}
     >
       <body className={`${schibstedGrotesk.variable} ${martianMono.variable} min-h-screen antialiased`}>
-        <Navbar></Navbar>
+        <PostHogProvider>
+          <Suspense fallback={null}>
+            <PageViewTracker />
+          </Suspense>
+          <Navbar></Navbar>
 
-        <div className="absolute inset-0 top-0 z-[-1] min-h-screen">
-          <LightRays
-            raysOrigin="top-center-offset"
-            raysColor="#ffffff"
-            raysSpeed={1}
-            lightSpread={0.5}
-            rayLength={3}
-            followMouse={true}
-            mouseInfluence={0.1}
-            noiseAmount={0}
-            distortion={0}
-            className="custom-rays"
-            pulsating={false}
-            fadeDistance={1}
-            saturation={1}
-          />
-        </div>
-        {children}
+          <div className="absolute inset-0 top-0 z-[-1] min-h-screen">
+            <LightRays
+              raysOrigin="top-center-offset"
+              raysColor="#ffffff"
+              raysSpeed={1}
+              lightSpread={0.5}
+              rayLength={3}
+              followMouse={true}
+              mouseInfluence={0.1}
+              noiseAmount={0}
+              distortion={0}
+              className="custom-rays"
+              pulsating={false}
+              fadeDistance={1}
+              saturation={1}
+            />
+          </div>
+          {children}
+        </PostHogProvider>
       </body>
     </html>
   );
