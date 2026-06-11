@@ -6,8 +6,16 @@ import { useEffect } from 'react'
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
-      api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+    const key = process.env.NEXT_PUBLIC_POSTHOG_KEY
+    const host = process.env.NEXT_PUBLIC_POSTHOG_HOST
+
+    if (!key) {
+      console.warn('PostHog init skipped because NEXT_PUBLIC_POSTHOG_KEY is missing.')
+      return
+    }
+
+    posthog.init(key, {
+      api_host: host,
       capture_pageview: false, // We capture pageviews manually
       capture_pageleave: true,
     })
